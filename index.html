@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8"/>
+	<meta name="google-site-verification" content="_1pet4kobnBgv3y9RdHemJxbYSqLT6CwF-rCmkiqrdw" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ระบบสืบค้นราคาประเมินที่ราชพัสดุ จันทบุรี</title>
+	<meta name="description" content="ค้นหาราคาประเมินที่ราชพัสดุง่ายๆ ด้วยเลข จบ. สำหรับพื้นที่จังหวัดจันทบุรี">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ==================================== */
+        /* 1. CSS Variables (ตัวแปร CSS)       */
+        /* ==================================== */
+        :root {
+            /* Light Mode Default */
+            --primary-green: #008000;         /* เขียวหลัก */
+            --dark-green: #004d00;            /* เขียวเข้ม */
+            --light-cream: #f0fdf0;           /* ครีมอ่อน (สำหรับพื้นหลังกล่องข้อมูล) */
+            --border-color: #99cc99;          /* สีขอบ */
+            --shadow-color: rgba(0,0,0,0.1);  /* สีเงา */
+            --text-color: #333;               /* สีข้อความหลัก */
+            --background-color: #e6ffe6;      /* สีพื้นหลัง */
+            --container-bg: #ffffff;          /* สีพื้นหลังคอนเทนเนอร์ */
+            --input-border: #ccc;             /* สีขอบ input */
+            --button-bg: var(--primary-green);/* สีพื้นหลังปุ่ม */
+            --button-text: #fff;              /* สีข้อความปุ่ม */
+            --table-header-bg: var(--dark-green); /* สีพื้นหลังหัวตาราง */
+            --table-header-text: #fff;        /* สีข้อความหัวตาราง */
+            --table-row-even-bg: #f2f2f2;     /* สีพื้นหลังแถวคู่ */
+            --table-row-odd-bg: #ffffff;      /* สีพื้นหลังแถวคี่ */
+            --link-color: var(--primary-green);/* สีลิงก์ */
+            --link-hover-color: var(--dark-green);/* สีลิงก์เมื่อโฮเวอร์ */
+            --modal-bg: rgba(0,0,0,0.5);      /* สีพื้นหลัง Modal */
+            --modal-content-bg: #fff;         /* สีพื้นหลัง Modal Content */
+            --modal-text-color: #333;         /* สีข้อความ Modal */
+            --clear-button-bg: #f44336;       /* สีแดงสำหรับปุ่มล้างข้อมูล */
+            --clear-button-hover: #d32f2f;    /* สีแดงเข้มเมื่อ hover */
+            --accent-color: #FFD700;          /* สีเน้น (เช่น สำหรับ spinner) */
+            --no-results-bg: #fff3cd;         /* พื้นหลังสำหรับข้อความไม่มีผลลัพธ์ */
+            --no-results-text: #856404;       /* ข้อความสำหรับไม่มีผลลัพธ์ */
+            --copied-bg: #4CAF50;             /* พื้นหลัง Copied message */
+            --copied-text: #fff;              /* ข้อความ Copied message */
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --primary-green: #4CAF50;
+            --dark-green: #388E3C;
+            --light-cream: #2e2e2e;
+            --border-color: #555;
+            --shadow-color: rgba(255,255,255,0.1);
+            --text-color: #e0e0e0;
+            --background-color: #1a1a1a;
+            --container-bg: #2b2b2b;
+            --input-border: #666;
+            --button-bg: var(--primary-green);
+            --button-text: #fff;
+            --table-header-bg: #333;
+            --table-header-text: #eee;
+            --table-row-even-bg: #3a3a3a;
+            --table-row-odd-bg: #2b2b2b;
+            --link-color: #81c784;
+            --link-hover-color: #a5d6a7;
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #3a3a3a;
+            --modal-text-color: #e0e0e0;
+            --clear-button-bg: #e57373;
+            --clear-button-hover: #ef5350;
+            --accent-color: #FFEA00;
+            --no-results-bg: #4a4a4a;
+            --no-results-text: #ffecb3;
+            --copied-bg: #388E3C;
+            --copied-text: #e0e0e0;
+        }
+
+        /* ==================================== */
+        /* 2. General Styles (รูปแบบทั่วไป)     */
+        /* ==================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Removed padding-top as header is no longer fixed */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto; /* Add margin-top for spacing from top of page */
+            padding: 30px;
+            background-color: var(--container-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            flex-grow: 1; /* Allow container to grow and push footer down */
+        }
+
+        /* ==================================== */
+        /* 3. Header (ส่วนหัว)                 */
+        /* ==================================== */
+        .header { /* Changed from 'header' to '.header' for class specificity */
+            background-color: var(--primary-green);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%; /* Take full width of its parent (.container) */
+            border-radius: 8px; /* Match container border-radius */
+            margin-bottom: 30px; /* Space below header */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex; /* Use flexbox for vertical alignment */
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items horizontally */
+            justify-content: center; /* Center items vertically if space allows */
+            opacity: 0; /* Start off-screen above */
+            transform: translateY(-20px);
+            animation: fadeInSlideDownHeader 0.5s ease-out forwards; /* Custom animation */
+            position: relative; /* For positioning header-controls */
+        }
+
+        @keyframes fadeInSlideDownHeader {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header img {
+            height: 100px; /* Adjust logo size */
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 0 0 5px 0; /* Adjust spacing between h1s */
+            font-size: 2em; /* Larger font for main title */
+            line-height: 1.2;
+        }
+        .header h1:last-of-type {
+            font-size: 1.5em; /* Smaller font for subtitle */
+            margin-bottom: 15px; /* Space between last h1 and p */
+            font-weight: 400; /* Lighter weight for subtitle */
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 300;
+        }
+
+        /* Header Controls (Theme Toggle, Info Button) */
+        .header-controls {
+            position: absolute;
+            top: 20px; /* Adjust as needed */
+            right: 20px; /* Adjust as needed */
+            display: flex;
+            gap: 10px; /* Space between buttons */
+        }
+
+        .theme-toggle,
+        .info-button {
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px; /* Fixed width for circular button */
+            height: 45px; /* Fixed height for circular button */
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle i,
+        .info-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover,
+        .info-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: white;
+            transform: scale(1.05);
+        }
+
+        .theme-toggle:active,
+        .info-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Dark mode specific button styles */
+        body.dark-mode .theme-toggle,
+        body.dark-mode .info-button {
+            border-color: rgba(0,0,0,0.5);
+            color: var(--primary-green);
+            background-color: var(--container-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .theme-toggle:hover,
+        body.dark-mode .info-button:hover {
+            background-color: var(--dark-green);
+            color: white;
+            border-color: var(--dark-green);
+        }
+
+
+        /* ==================================== */
+        /* 4. Footer (ส่วนท้าย)                */
+        /* ==================================== */
+        footer {
+            text-align: center;
+            padding: 25px 0; /* เพิ่ม padding บนล่าง */
+            margin-top: auto; /* Push footer to the bottom */
+            color: var(--text-color);
+            width: 100%; /* Keep footer full width */
+            border-top: 2px solid var(--primary-green); /* ทำให้ขอบบนเด่นขึ้น */
+            background-color: var(--container-bg);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); /* เพิ่มเงาเล็กน้อย */
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.6s ease, transform 0.6s ease;
+            opacity: 0; /* Hidden initially */
+            transform: translateY(50px); /* Start slightly below */
+            display: flex; /* ใช้ flexbox จัดกึ่งกลาง */
+            flex-direction: column; /* วางเรียงจากบนลงล่าง */
+            align-items: center; /* จัดกึ่งกลางแนวนอน */
+            justify-content: center; /* จัดกึ่งกลางแนวตั้ง */
+            gap: 10px; /* ระยะห่างระหว่างข้อความกับ social links (ถ้ามี) */
+        }
+
+        footer.footer-show {
+            opacity: 1; /* Fully visible */
+            transform: translateY(0); /* Slide up to original position */
+        }
+
+        .footer-copyright {
+            font-size: 0.95em;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer-copyright i {
+            font-size: 1.1em;
+            color: var(--primary-green);
+        }
+
+        /* Optional: Social Media Links (if uncommented in HTML) */
+        /*
+        .social-links {
+            margin-top: 10px;
+        }
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.5em;
+            margin: 0 10px;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .social-links a:hover {
+            color: var(--primary-green);
+            transform: scale(1.1);
+        }
+        */
+
+        /* ==================================== */
+        /* 5. Search Form (ฟอร์มค้นหา)          */
+        /* ==================================== */
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background-color: var(--light-cream);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: inset 0 1px 5px var(--shadow-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            align-items: end;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.6s ease-out 0.3s forwards;
+        }
+
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            font-size: 1em;
+            color: var(--text-color);
+            background-color: var(--container-bg);
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2C114.7L154.5%2C247.2c-2.4%2C2.4-5.5%2C3.6-8.7%2C3.6s-6.3-1.2-8.7-3.6L5.4%2C114.7c-4.8-4.8-4.8-12.5%2C0-17.3s12.5-4.8%2C17.3%2C0l131.8%2C131.8l131.8-131.8c4.8-4.8%2C12.5-4.8%2C17.3%2C0S291.8%2C109.9%2C287%2C114.7z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 12px;
+            padding-right: 30px;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(0, 128, 0, 0.3);
+            transform: scale(1.005);
+        }
+
+        .clear-input-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 1em;
+            cursor: pointer;
+            display: none;
+            padding: 5px;
+            line-height: 1;
+        }
+        .clear-input-button:hover {
+            color: #666;
+        }
+
+        .search-button, .clear-button {
+            padding: 12px 15px;
+            color: var(--button-text);
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            font-weight: 600;
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .search-button:active, .clear-button:active {
+            transform: scale(0.98);
+        }
+
+        .search-button {
+            background-color: var(--button-bg);
+        }
+
+        .search-button:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        .clear-button {
+            background-color: var(--clear-button-bg);
+        }
+
+        .clear-button:hover {
+            background-color: var(--clear-button-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ==================================== */
+        /* 6. Results Table (ตารางผลลัพธ์)      */
+        /* ==================================== */
+        .result-section {
+            margin-top: 30px;
+            background-color: var(--light-cream);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow-x: auto;
+            padding: 20px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .result-section.hidden {
+            display: none;
+        }
+
+        .result-section.show-animated {
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+
+        .result-section h2 {
+            text-align: center; /* Ensure "ผลการค้นหา" is centered */
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .result-table th,
+        .result-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+            transition: color 0.3s ease;
+            vertical-align: middle;
+        }
+
+        .result-table .text-align-left {
+            text-align: left;
+        }
+
+        .result-table th {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-text);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .result-table tbody tr:nth-child(even) {
+            background-color: var(--table-row-even-bg);
+        }
+
+        .result-table tbody tr:nth-child(odd) {
+            background-color: var(--table-row-odd-bg);
+        }
+
+        .result-table tbody tr:hover {
+            background-color: rgba(0, 128, 0, 0.05);
+            cursor: pointer;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        body.dark-mode .result-table tbody tr:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .result-table tbody tr {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: rowFadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes rowFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animation delay for each row */
+        .result-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .result-table tbody tr:nth-child(2) { animation-delay: 0.15s; }
+        .result-table tbody tr:nth-child(3) { animation-delay: 0.2s; }
+        .result-table tbody tr:nth-child(4) { animation-delay: 0.25s; }
+        .result-table tbody tr:nth-child(5) { animation-delay: 0.3s; }
+        .result-table tbody tr:nth-child(6) { animation-delay: 0.35s; }
+        .result-table tbody tr:nth-child(7) { animation-delay: 0.4s; }
+        .result-table tbody tr:nth-child(8) { animation-delay: 0.45s; }
+        .result-table tbody tr:nth-child(9) { animation-delay: 0.5s; }
+        .result-table tbody tr:nth-child(10) { animation-delay: 0.55s; }
+
+        .result-table .action-link {
+            color: var(--link-color);
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .result-table .action-link i {
+            font-size: 1.5em;
+            color: var(--link-color);
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .result-table .action-link:hover i {
+            color: var(--link-hover-color);
+            transform: scale(1.2);
+        }
+
+        .result-table .action-link:active i {
+            transform: scale(0.9);
+        }
+
+        .no-results-message {
+            text-align: center;
+            padding: 20px;
+            margin-top: 10px; /* Changed from 20px to 10px */
+            background-color: var(--no-results-bg);
+            color: var(--no-results-text);
+            border-radius: 8px;
+            border: 1px solid var(--no-results-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .no-results-message.show-animated {
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+
+        .no-results-message i {
+            font-size: 1.8em;
+        }
+
+        /* ==================================== */
+        /* 7. Pagination (การแบ่งหน้า)         */
+        /* ==================================== */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px; /* Changed from 25px to 15px */
+            gap: 15px;
+        }
+
+        .pagination-controls button {
+            padding: 10px 20px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        .pagination-controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .pagination-controls button:active {
+            transform: scale(0.98);
+        }
+
+        .page-info {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* ==================================== */
+        /* 8. Modals (โมดัล)                   */
+        /* ==================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0); /* Start with transparent backdrop */
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeInBackdrop 0.4s forwards; /* Backdrop fade in */
+        }
+
+        @keyframes fadeInBackdrop {
+            from { background-color: rgba(0,0,0,0); }
+            to { background-color: var(--modal-bg); }
+        }
+
+        @keyframes fadeOutBackdrop {
+            from { background-color: var(--modal-bg); }
+            to { background-color: rgba(0,0,0,0); }
+        }
+
+        @keyframes animatetop {
+            from {top: -300px; opacity: 0}
+            to {top: 0; opacity: 1}
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            margin: auto;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            position: relative;
+            animation-name: animatetop;
+            animation-duration: 0.4s;
+            color: var(--modal-text-color);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary-green);
+            text-align: center;
+        }
+
+        .modal-content p {
+            margin-bottom: 10px;
+        }
+
+        .modal-content ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .modal-content li {
+            margin-bottom: 5px;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        body.modal-open {
+            overflow: hidden; /* Prevent scrolling of body when modal is open */
+        }
+
+        /* ==================================== */
+        /* 9. Loading Spinner (ตัวหมุนโหลด)     */
+        /* ==================================== */
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 10;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(2px);
+            z-index: 9;
+            display: none;
+            border-radius: 8px;
+        }
+        body.dark-mode .loading-overlay {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .loading-overlay.active {
+            display: block;
+        }
+
+        /* ==================================== */
+        /* 10. Scroll to Top Button (ปุ่มเลื่อนขึ้น) */
+        /* ==================================== */
+        #scrollToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: var(--primary-green);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            box-shadow: 0 8px 8px var(--shadow-color);
+            transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: var(--dark-green);
+            transform: translateY(-2px);
+        }
+
+        #scrollToTopBtn:active {
+            transform: scale(0.95);
+        }
+
+        /* ==================================== */
+        /* 11. Responsive Adjustments (การปรับตามขนาดหน้าจอ) */
+        /* ==================================== */
+        @media screen and (max-width: 768px) {
+            .header img {
+                height: 45px;
+                margin-bottom: 10px;
+            }
+            .header h1 {
+                font-size: 1.6em;
+            }
+            .header h1:last-of-type {
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+            .header p {
+                font-size: 1em;
+            }
+
+            .header-controls {
+                top: 10px;
+                right: 10px;
+                gap: 5px;
+            }
+            .theme-toggle, .info-button {
+                width: 38px;
+                height: 38px;
+                font-size: 1em;
+                padding: 8px;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+
+            .result-table thead {
+                display: none;
+            }
+
+            .result-table, .result-table tbody, .result-table tr, .result-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .result-table tr {
+                margin-bottom: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                box-shadow: 0 2px 5px var(--shadow-color);
+                background-color: var(--container-bg);
+                padding: 10px;
+            }
+
+            .result-table td {
+                text-align: center;
+                padding-left: 10px;
+                position: relative;
+                border: none;
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+
+            .result-table td.text-align-left {
+                text-align: left;
+            }
+
+            .result-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: auto;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: var(--primary-green);
+                transform: translateY(-50%);
+                top: 50%;
+            }
+
+            .pagination-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .pagination-controls button {
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+		
+		/* =============================== */
+/* 1. Global Theme Variables       */
+/* =============================== */
+:root {
+  /* Light Mode */
+  --primary-green: #0a8754;
+  --dark-green: #056047;
+  --light-bg: #f9fff9;
+  --border-color: #d6e9d6;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --text-color: #222;
+  --background-color: #e9f7ef;
+  --container-bg: #ffffff;
+  --button-bg: var(--primary-green);
+  --button-text: #fff;
+  --table-header-bg: var(--dark-green);
+  --table-header-text: #fff;
+  --table-row-even-bg: #f5fdf7;
+  --table-row-odd-bg: #ffffff;
+  --link-color: var(--primary-green);
+  --link-hover-color: var(--dark-green);
+}
+
+body.dark-mode {
+  /* Dark Mode */
+  --primary-green: #4caf6f;
+  --dark-green: #2e7d4f;
+  --light-bg: #2a2a2a;
+  --border-color: #444;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --text-color: #e6e6e6;
+  --background-color: #1d1d1d;
+  --container-bg: #2b2b2b;
+  --button-bg: var(--primary-green);
+  --button-text: #fff;
+  --table-header-bg: #333;
+  --table-header-text: #f0f0f0;
+  --table-row-even-bg: #2e2e2e;
+  --table-row-odd-bg: #242424;
+  --link-color: #7be495;
+  --link-hover-color: #9fffc7;
+}
+
+/* =============================== */
+/* 2. Container & Header           */
+/* =============================== */
+.container {
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 6px 20px var(--shadow-color);
+}
+
+.header {
+  border-radius: 14px;
+  padding: 25px;
+  background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* =============================== */
+/* 3. Buttons                      */
+/* =============================== */
+button {
+  border-radius: 10px !important;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.search-button {
+  background: var(--primary-green);
+}
+.search-button:hover {
+  background: var(--dark-green);
+  transform: translateY(-3px);
+}
+
+.clear-button {
+  background: #e74c3c;
+}
+.clear-button:hover {
+  background: #c0392b;
+  transform: translateY(-3px);
+}
+
+/* Theme Toggle / Info */
+.theme-toggle, .info-button {
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+}
+body.dark-mode .theme-toggle, body.dark-mode .info-button {
+  background: rgba(0,0,0,0.25);
+}
+
+/* =============================== */
+/* 4. Inputs                       */
+/* =============================== */
+input[type="text"], select {
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: box-shadow 0.3s;
+}
+input:focus, select:focus {
+  box-shadow: 0 0 0 4px rgba(10, 135, 84, 0.25);
+}
+
+/* =============================== */
+/* 5. Results Table                */
+/* =============================== */
+.result-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+.result-table th {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.result-table tr:hover {
+  background: rgba(10, 135, 84, 0.08);
+  transform: scale(1.01);
+}
+
+/* =============================== */
+/* 6. Modal                        */
+/* =============================== */
+.modal-content {
+  border-radius: 14px;
+  animation: scaleFadeIn 0.35s ease-out;
+}
+@keyframes scaleFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* =============================== */
+/* 7. Scroll to Top                */
+/* =============================== */
+#scrollToTopBtn {
+  border-radius: 50%;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+/* =============================== */
+/* 1. Theme Variables              */
+/* =============================== */
+:root {
+  --primary-green: #16a34a;
+  --dark-green: #0f5132;
+  --bg-light: #f9fafb;
+  --text-dark: #1f2937;
+  --text-light: #f9fafb;
+  --card-light: #ffffff;
+  --card-dark: #1e1e1e;
+  --border-light: #e5e7eb;
+  --border-dark: #444;
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+  background: #111827;
+  color: var(--text-light);
+}
+
+/* =============================== */
+/* 2. Header                       */
+/* =============================== */
+.header {
+  background: linear-gradient(135deg, var(--primary-green), #22c55e);
+  padding: 25px;
+  text-align: center;
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+.header img {
+  height: 80px;
+  margin-bottom: 10px;
+}
+.header h1 {
+  margin: 4px 0;
+  font-weight: 700;
+}
+
+/* =============================== */
+/* 3. Form                         */
+/* =============================== */
+.search-form {
+  background: var(--card-light);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+body.dark-mode .search-form {
+  background: var(--card-dark);
+  border: 1px solid var(--border-dark);
+}
+.form-group input, .form-group select {
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px;
+  transition: 0.3s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.3);
+}
+
+/* =============================== */
+/* 4. Buttons                      */
+/* =============================== */
+button {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+.search-button {
+  background: var(--primary-green);
+  color: white;
+}
+.search-button:hover {
+  background: var(--dark-green);
+  transform: translateY(-2px);
+}
+.clear-button {
+  background: #ef4444;
+  color: white;
+}
+.clear-button:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+}
+
+/* =============================== */
+/* 5. Results Table                */
+/* =============================== */
+.result-section {
+  background: var(--card-light);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+body.dark-mode .result-section {
+  background: var(--card-dark);
+  border: 1px solid var(--border-dark);
+}
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.result-table th {
+  background: var(--primary-green);
+  color: white;
+  padding: 12px;
+}
+.result-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+.result-table tr:hover {
+  background: rgba(22,163,74,0.08);
+}
+
+/* =============================== */
+/* 6. Modal                        */
+/* =============================== */
+.modal-content {
+  border-radius: 16px;
+  animation: scaleFadeIn 0.3s ease;
+}
+@keyframes scaleFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* =============================== */
+/* 7. Scroll To Top                */
+/* =============================== */
+#scrollToTopBtn {
+  border-radius: 50%;
+  background: var(--primary-green);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+#scrollToTopBtn:hover {
+  background: var(--dark-green);
+}
+
+/* ==================================== */
+/* 12. Statistics Section (ส่วนสถิติ)   */
+/* ==================================== */
+.stats-section {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: var(--light-cream);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px var(--shadow-color);
+    text-align: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.6s ease, transform 0.6s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInSlideUp 0.6s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px var(--shadow-color);
+}
+
+.stat-card i {
+    font-size: 2.5em;
+    color: var(--primary-green);
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.stat-number {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--dark-green);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: var(--text-color);
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <img src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png" alt="โลโก้กรมธนารักษ์">
+            <h1>ระบบสืบค้นราคาประเมินที่ราชพัสดุ</h1>
+            <h1>(กรณีที่ไม่มีเอกสารสิทธิ์)</h1>
+            <p>สำนักงานธนารักษ์พื้นที่จันทบุรี</p>
+            <div class="header-controls">
+                <button id="themeToggleButton" class="theme-toggle" aria-label="สลับโหมดกลางวันกลางคืน" title="สลับโหมดกลางวันกลางคืน">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="infoButton" class="info-button" aria-label="เกี่ยวกับระบบ" title="เกี่ยวกับระบบ">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="search-section">
+                <div class="search-form" role="search">
+                    <div class="form-group">
+                        <label for="docNumber">จบ:</label>
+                        <input type="text" id="docNumber" placeholder="หมายเลข จบ." aria-label="ป้อนหมายเลข จบ.">
+                        <button type="button" class="clear-input-button" id="clearDocNumberInput" title="ล้างข้อมูลในช่อง"><i class="fas fa-times-circle"></i></button>
+                    </div>
+                    <div class="form-group">
+                        <label for="province">จังหวัด:</label>
+                        <input type="text" id="province" value="จันทบุรี" readonly aria-label="จังหวัดจันทบุรี (แก้ไขไม่ได้)">
+                    </div>
+                    <div class="form-group">
+                        <label for="district">อำเภอ:</label>
+                        <select id="district" aria-label="เลือกอำเภอ">
+                            <option value="">ทั้งหมด</option>
+                        </select>
+                        <button type="button" class="clear-input-button" id="clearDistrictInput" title="ล้างการเลือกอำเภอ" style="display: none;"><i class="fas fa-times-circle"></i></button>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" id="searchButton" class="search-button">
+                            <i class="fas fa-search"></i> ค้นหา
+                        </button>
+                        <button type="button" id="clearButton" class="clear-button">
+                            <i class="fas fa-undo"></i> ล้างข้อมูล
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resultSection" class="result-section hidden" aria-live="polite">
+                <h2 class="text-center">ผลการค้นหา</h2>
+                <div id="loadingOverlay" class="loading-overlay"></div>
+                <div id="loadingSpinner" class="loading-spinner" role="status" aria-label="กำลังโหลดข้อมูล"></div>
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>จบ. </th>
+                            <th>จังหวัด</th>
+                            <th>อำเภอ</th>
+                            <th>การใช้ประโยชน์</th>
+                            <th>เอกสาร</th>
+                            <th>แผนที่</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                        </tbody>
+                </table>
+                <div id="noResultsMessage" class="no-results-message hidden" role="alert">
+                    <i class="fas fa-exclamation-circle"></i> ไม่พบข้อมูลที่ตรงกับเงื่อนไขการค้นหา
+                </div>
+                <div class="pagination-controls" role="navigation" aria-label="การแบ่งหน้าผลการค้นหา">
+                    <button id="prevPage" aria-label="หน้าที่แล้ว">ย้อนกลับ</button>
+                    <span id="pageInfo" class="page-info" aria-live="assertive"></span>
+                    <button id="nextPage" aria-label="หน้าถัดไป">ถัดไป</button>
+                </div>
+            </section>
+        </main>
+    </div> 
+			<footer style="padding: 30px; text-align: center; background-color: #f9f9f9; font-size: 12px;">
+			  <span style="display: inline-flex; align-items: center; gap: 8px;">
+				<img src="https://upload.wikimedia.org/wikipedia/th/8/81/The_Treasury_Department_Logo.png" 
+					 alt="โลโก้กรมธนารักษ์" 
+					 style="width: 80px; height: auto;">
+				<span>
+				   
+				  <h2>กรมธนารักษ์จันทบุรี. สงวนลิขสิทธิ์.</h2>
+				</span>
+			  </span>
+			</footer>
+
+    <button id="scrollToTopBtn" title="กลับขึ้นบน" aria-label="เลื่อนกลับไปด้านบนสุดของหน้า">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <div id="info-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="modal-content">
+            <span class="close-button" aria-label="ปิด">×</span>
+            <h2 id="modal-title">คู่มือการใช้งาน</h2>
+            <p>ระบบสืบค้นข้อมูลที่ราชพัสดุ (กรณีที่ไม่มีเอกสารสิทธิ์) จัดทำขึ้นเพื่ออำนวยความสะดวกในการค้นหาข้อมูลที่ราชพัสดุ(กรณีที่ไม่มีเอกสารสิทธิ์)</p>
+            <h3>วิธีการใช้งาน:</h3>
+            <ul>
+                <li>สามารถค้นหาได้จาก <strong>จบ.</strong> และ <strong>อำเภอ</strong></li>
+                <li>สามารถใส่ข้อมูลเพียงช่องเดียว หรือหลายช่อง เพื่อจำกัดผลการค้นหา</li>
+                <li>คลิกปุ่ม "ค้นหา" เพื่อแสดงผลลัพธ์</li>
+                <li>คลิกที่ไอคอน <i class="fas fa-file-alt" aria-hidden="true"></i> หรือ <i class="fas fa-map-marker-alt" aria-hidden="true"></i> เพื่อ <strong>เปิดลิงก์</strong> ในแท็บใหม่</li>
+                <li>ใช้ปุ่ม "ย้อนกลับ" และ "ถัดไป" เพื่อเลื่อนดูผลลัพธ์ในแต่ละหน้า</li>
+                <li>สามารถสลับโหมดการแสดงผลเป็นแบบสว่างหรือมืดได้ โดยคลิกที่ไอคอนรูปพระจันทร์/พระอาทิตย์ ที่มุมขวาบน</li>
+            </ul>
+            
+			 <p>
+			  📄 ดาวน์โหลดคู่มือฉบับเต็มได้ที่:
+			  <a href="https://drive.google.com/file/d/1fyddgxYgCZYriNWdmw0rP54gg2TWyAY8/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+				Google Drive
+			  </a>
+        </div>
+    <section class="stats-section">
+        <h2 class="text-center">สถิติการใช้งาน</h2>
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-content">
+                    <span class="stat-number" id="visitorCount">0</span>
+                    <span class="stat-label">ผู้เข้าชม (เดือนนี้)</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-search"></i>
+                <div class="stat-content">
+                    <span class="stat-number" id="searchCount">0</span>
+                    <span class="stat-label">การค้นหา (เดือนนี้)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>	
+	
+
+    <script>
+        // ====================================
+        // JavaScript (Logic)
+        // ====================================
+
+        // 1. DOM Elements (การอ้างอิงถึง Element ใน HTML)
+        const docNumberInput = document.getElementById('docNumber');
+        const clearDocNumberInputButton = document.getElementById('clearDocNumberInput');
+        const provinceInput = document.getElementById('province');
+        const districtSelect = document.getElementById('district');
+        const clearDistrictInputButton = document.getElementById('clearDistrictInput');
+        const searchButton = document.getElementById('searchButton');
+        const clearButton = document.getElementById('clearButton');
+        const resultsBody = document.getElementById('resultsBody');
+        const resultSection = document.getElementById('resultSection');
+        const prevPageButton = document.getElementById('prevPage');
+        const nextPageButton = document.getElementById('nextPage');
+        const pageInfoSpan = document.getElementById('pageInfo');
+        const themeToggleButton = document.getElementById('themeToggleButton'); // Re-added
+        const infoButton = document.getElementById('infoButton'); // Re-added
+        const infoModal = document.getElementById('info-modal');
+        const closeButton = infoModal.querySelector('.close-button');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        const footerElement = document.querySelector('footer');
+
+        // 2. State Variables (ตัวแปรสถานะ)
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let allResults = [];
+        let isDarkMode = false; // Initialize state for dark mode
+
+        // Your Data (cleaned doc_number - removed dots if any)
+        const rawData = [
+            {
+                doc_number: 1,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ศาลากลางจังหวัดจันทบุรี/อบจ.จันทบุรี/สนง.วัฒนธรรมจังหวัด/สนง.อัยการจังหวัด/สนง.โยธาธิการจังหวัด/ศูนย์การกีฬาแห่งประเทศไทยเช่าบางส่วน/ที่ตั้งเสาอากาศของศาลากลางจังหวัดจันทบุรี',
+                document_link: 'https://drive.google.com/file/d/1I-QWSE_nSC-yqFPOPyRFngvaotK_FY_-/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1Sn6-4PTbbJBwYXyp9cIwSx2u0oZV7xg&usp=sharingเข้าไป'
+            },
+            {
+                doc_number: 3,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'บ้านพักอัยการจังหวัด/บ้านพักสรรพากรจังหวัด/ศูนย์กีฬาแห่งประเทศไทยเช่าบางส่วน',
+                document_link: 'https://drive.google.com/file/d/1mLOP71bubqY3Q-t2a6EPfZNTeEqfej-t/view',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1F1flmVNRPG_Xd81kM3V4rQqToND8xSU&usp=sharing'
+            },
+            {
+                doc_number: 4,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'สำนักงานที่ดินจังหวัดจันทบุรี/จัดให้เช่าบริษัท ที โอ ที',
+                document_link: 'https://drive.google.com/file/d/1HYg79tplJq9XRArO7XU_fx6CtFtWNma9/view',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1TMSJq_vKNTQZu6nEisA0SA5YfLovsFk&usp=sharing'
+            },
+            {
+                doc_number: 5,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ใช้เป็นที่ตั้งสำนักงานอุตสาหกรรมจังหวัดจันทบุรี',
+                document_link: 'https://drive.google.com/file/d/1BQtES_bGSkMu0s4RYRpzfuo3uxF_A7cj/view',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1A88PK2xdwM9A9HYSZ8m8app-p5TJm9A&usp=sharing'
+            },
+            {
+                doc_number: 46,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จวนผู้ว่าราชการจังหวัด/สนง.สงเคราะห์ทหารผ่านศึก/สนง.กาชาติ/บ้านพักข้าราชการส่วนต่างๆจังหวัดจันทบุรี',
+                document_link: 'https://drive.google.com/file/d/1nvxsJfcdq6zuQGaSwq1MuhqacQm6S-9Y/view',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1CODNbUU8VsQZc3c1eM-REsCQlon2GT8&usp=sharing'
+            },
+            {
+                doc_number: 47,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1H58KDhXPym-Ft6GmO155UzvmYTvh5ewC/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1Lxsy6z4hGjb4wwytBgPh742b6Ut-Ols&usp=sharing'
+            },
+            {
+                doc_number: 56,
+                province: 'จันทบุรี',
+                district: 'อำเภอเขาคิชฌกูฏ',
+                location: 'ค่ายลูกเสือจันทบุรี และบ้านพัก, โรงเรียนศึกษาสงเคราะห์',
+                document_link: 'https://drive.google.com/file/d/14MA7_ELRWO31hJeZbku7veNB0n4ZHtvx/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1hpTxjwZpp5HVL0mbXSNtypWpFAG8JEY&usp=sharing'
+            },
+            {
+                doc_number: 67,
+                province: 'จันทบุรี',
+                district: 'อำเภอท่าใหม่',
+                location: 'ที่ว่าการอำเภอท่าใหม่(หลังเก่า),จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1z_B0yok2WEGdbEOq2MsqvyYqrDI3dWk9/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1trMX6GkWiQWhWJVkLlpjVfuhgGpMEAc&usp=sharing'
+            },
+            {
+                doc_number: 82,
+                province: 'จันทบุรี',
+                district: 'อำเภอขลุง',
+                location: 'ใช้ในกิจการประปาส่วนภูมิภาคอำเภอขลุง',
+                document_link: 'https://drive.google.com/file/d/1KJOUgzIrSfObZYPfzLSQCydiNpODdU0I/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1MR4V8vmtdmNf8-xFKC8hIQOfU3FjrKg&usp=sharing'
+            },
+            {
+                doc_number: 94,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'โรงเรียนบ้านชำโสม',
+                document_link: 'https://drive.google.com/file/d/1rgjqR1Aw3PXCm1hGdlXP-VX7-t-xA_QJ/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1HkfY-_mgr_1I7-aYpJJiF4bBRtfPmbo&usp=sharing'
+            },
+            {
+                doc_number: 95,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จัดที่ไว้เพื่อทำแปลงเกษตรของโรงเรียนบ้านชำโสม',
+                document_link: 'https://drive.google.com/file/d/1SVyhOvlE6WNhpbaQESxTSA-3XLDEPbMK/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1XRrDTs3UZ6k9_29YU8R9dmBVOExFHw8&usp=sharing'
+            },
+			{
+                doc_number: 97,
+                province: 'จันทบุรี',
+                district: 'ขลุง',
+                location: 'กระโจมไฟเกาะจิก กรมอุทกศาสตร์ ทร',
+                document_link: 'https://drive.google.com/file/d/1QrOID0h-KP0E57vsM0gfonqNqOcNllaV/view?usp=sharing',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=164zU7Tq_o3pXXuimItLoUpP0PPO--lg&usp=sharing'
+            },
+            {
+                doc_number: 107,
+                province: 'จันทบุรี',
+                district: 'อำเภอแหลมสิงห์',
+                location: 'กระทรวงมหาดไทย,บ้านพักนายอำเภอ,กระทรวงศึกษาธิการ,บ้านพักศึกษาธิการอำเภอ,กระทรวงเกษตร,บ้านพักประมงอำเภอ,ตึกแดง,สงวนไว้ใช้ในราชการอำเภอ,จัดให้เช่า,สถานีอนามัยปากน้ำแหลมสิงห์',
+                document_link: 'https://drive.google.com/file/d/1muf6oZGb5XFvxvXHT4N1wNSWRujDUexr/view?usp=sharing',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1xadFeimMSVgWdgdd-hvgU0lkFmvbMYw&usp=sharing'
+            },
+            {
+                doc_number: 111,
+                province: 'จันทบุรี',
+                district: 'อำเภอมะขาม',
+                location: 'จัดให้เช่า/เทศบาลสร้างลานกีฬาอเนกประสงค์และอาคารอเนกประสงค์',
+                document_link: 'https://drive.google.com/file/d/1O06MD_d9fpXVV1D4kmES4aGmrtXfHL8F/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1a2TH9kJexCIu_xkvntpCzeL2bHVP9I4&usp=sharing'
+            },
+            {
+                doc_number: 139,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'ที่ว่าการอำเภอพระยากำพุธ/ที่ทำการและศูนย์ อพปร./เทศบาลสร้างศูนย์พัฒนาเด็กเล็กบ้านพญากำพุธ/เทศบาลก่อสร้างระบบประปาหมู่บ้าน/จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1xbfsu1G6V23Hyj8Rn8EGEUoJN2RPyUjh/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1vAjtzSo52_U6Uom7rjT1jO3whceVL_o&usp=sharing'
+            },
+            {
+                doc_number: 146,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'ปัจจุบันเป็นที่ว่าง(เดิมเป็นที่ตั้งฐานปฎิบัติการของกองร้อย ต.ช.ด. เขต2)',
+                document_link: 'https://drive.google.com/file/d/1AfV0_NAOSkeVvsaoCzcNjBKIotHMsSHe/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1OYgG9_kqdOIhSxj96UVMQ3bkdbha6tU&usp=sharing'
+            },
+            {
+                doc_number: 148,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'กองกำกับการตำรวจตระเวนชายแดนที่ 11',
+                document_link: 'https://drive.google.com/file/d/1kM-1SOUDCDn8dzPMpBaEFaAyyegkufg4/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1DlU9W_woXH5c5im98JW9qs-qDe79Wfg&usp=sharing'
+            },
+			{
+                doc_number: 151,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'ตชด.เขต 2',
+                document_link: 'https://drive.google.com/file/d/16H8mzOqfj84GbwMXeQLuXwfFXMNb8ftk/view?usp=sharing',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1roAiORWUjpx8_wgcuQ2d1RGd98Nn0T0&usp=sharing'
+            },
+            {
+                doc_number: 180,
+                province: 'จันทบุรี',
+                district: 'อำเภอขลุง',
+                location: 'กรมป่าไม้/กรมประมง/เทศบาลเมืองขลุงใช้ทำบ่อบำบัดน้ำเสีย/บ้านพักข้าราชการสรรพสามิต/จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/18IUcFfJcxH98JRYt8LScXh-mPjC9SvYA/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1ET7tPqeNuh1fNTpLwpP1AJ7qnoV1NHo&usp=sharing'
+            },
+            {
+                doc_number: 206,
+                province: 'จันทบุรี',
+                district: 'อำเภอท่าใหม่',
+                location: 'โรงเรียนวัดธรรมหรรษาราม, สถานีอนามัยยางระโหง',
+                document_link: 'https://drive.google.com/file/d/1WghMGGUeX12LueO6nWJ4zsqM-l2sig-G/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1BVzedqxALun3bvCzdAiSnPn95odi8DI&usp=sharing'
+            },
+            {
+                doc_number: 211,
+                province: 'จันทบุรี',
+                district: 'อำเภอท่าใหม่',
+                location: 'นิคมแพร่งขาหยั่ง กรมควบคุมโรคติดต่อ',
+                document_link: 'https://drive.google.com/file/d/1ewpwvG9n3w4Rgy2CkSrnOLnubahxOVU-/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1gy7f9ZQSdRoqr0GiqKseF4OfbqcXA3A&usp=sharing'
+            },
+            {
+                doc_number: 214,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'โรงเรียนวัดโยธานิมิต/กรมศิลปากร/กลุ่มงานโบราณคดีใต้น้ำ',
+                document_link: 'https://drive.google.com/file/d/1mNH8isThza8aSGziEN4-N0Uczzo4_FQG/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1zFtbX7aJ5tfuOb0qrGZltOUqpkhasA8&usp=sharing'
+            },
+            {
+                doc_number: 215,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ตำรวจน้ำ,กรมศิลปากร,กรมศุลกากร,จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1qVzpV4m1dNjEEml8SSrji2LuNxj9HYMR/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1bqDOUt5bNzmhClcoRU7SZyP2Txy7R0w&usp=sharing'
+            },
+            {
+                doc_number: 221,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ที่ตั้งศาลเจ้าพ่อหลักเมือง/ที่ตั้งห้องสมุดประชาชนจันทบุรี/สโมสรข้าราชการ',
+                document_link: 'https://drive.google.com/file/d/11aiA4RI8qV4fKgGOwTPWg8NO3ifBXE-S/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1dAVliURv0IXhu0tAEvShs9dmDPuGFv0&usp=sharing'
+            },
+            {
+                doc_number: 225,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ที่ตั้งเรือนจำจังหวัด(เดิม),สำนักงานป่าไม้,จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/13lvR4jcYQF-XM9uVekOkocQkMgUejgqg/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1Na4LMnm0CuI2lu40CKY2TW9UKLG26CE&usp=sharing'
+            },
+            {
+                doc_number: 234,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ร.พ.พระปกเกล้าจันทบุรี',
+                document_link: 'https://drive.google.com/file/d/1hbXVL3nWNKAqxKTAqn8sx3y27b5cyplI/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1wQhNBbhDcUaXZ3APHD34QFtXw0FWswE&usp=sharing'
+            },
+            {
+                doc_number: 254,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'โรงเรียนบ้านพญากำพุธ',
+                document_link: 'https://drive.google.com/file/d/151Bzjve5STC_EulNYcaugdxKSluSQh_P/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1EWv4V_kqeENqVWjy5vJHZXmFJO5hKUg&usp=sharing'
+            },
+            {
+                doc_number: 289,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'สงวนไว้สร้างโรงเรียนมัธยม',
+                document_link: 'https://drive.google.com/file/d/1c6t79G97pRnaitnFrByQ_hVUvuybLUdW/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1ZaZtFPU_dge1qZWPjr5zKRXm88Lklt4&usp=sharing'
+            },
+            {
+                doc_number: 294,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'สงวนไว้สร้างโรงเรียนศึกษาสงเคราะห์โป่งน้ำร้อน',
+                document_link: 'https://drive.google.com/file/d/1aqC1-QbnM8y0z8KlsLdRjCo4EzO-Uq15/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=16AISp5cVozUEXFXBKOdpfz8cJjv-9zI&usp=sharing'
+            },
+            {
+                doc_number: 310,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'วิทยาลัยเทคนิคจันทบุรี',
+                document_link: 'https://drive.google.com/file/d/1W2FmW5JQeynGcogF3wUQ5lLiXZP9e3rs/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1zch_-YNnx51_cTLttdxyI7xzTOtlmds&usp=sharing'
+            },
+            {
+                doc_number: 311,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'วิทยาลัยเทคนิคจันทบุร(บ้านพัก),จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1-J5c9yhguU6LzjCnOQ8e2P5kpaJIU9pH/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1yGAHnAOGHA57B5XBUhQEDou3QLBqy6E&usp=sharing'
+            },
+            {
+                doc_number: 353,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ที่ตั้งวิทยาลัยพยาบาลพระปกเกล้า',
+                document_link: 'https://drive.google.com/file/d/1BIe7BWw_NZmX1QcKfzEKQSHnBtzwSuTc/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1M3bHr6z7ALisCsxVXltXrRPXSDcQznY&usp=sharing'
+            },
+            {
+                doc_number: 398,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1fUyPcn-AUB7B6fshAFrTC2EAoVFAYfdp/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1o32aajY2X2TsSJHPxVcXJdLQ7bg8sCQ&usp=sharing'
+            },
+            {
+                doc_number: 399,
+                province: 'จันทบุรี',
+                district: 'อำเภอแหลมสิงห์',
+                location: 'ที่ตั้งเทศบาลพลิ้ว,การประปาพลิ้ว',
+                document_link: 'https://drive.google.com/file/d/1fUyPcn-AUB7B6fshAFrTC2EAoVFAYfdp/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1MDEAN0xgkfjdhMvhdYupHWGbhj8199U&usp=sharing'
+            },
+            {
+                doc_number: 400,
+                province: 'จันทบุรี',
+                district: 'อำเภอแหลมสิงห์',
+                location: 'จัดให้เช่าทั้งแปลง',
+                document_link: 'https://drive.google.com/file/d/1gQYXr8LGWFPxDOMM398kx0L3DCVKCn4K/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1d97j7In5JS8LpRmbpmY3SqojPaSmZho&usp=sharing'
+            },
+            {
+                doc_number: 427,
+                province: 'จันทบุรี',
+                district: 'อำเภอนายายอาม',
+                location: 'นิคมโรคเรื้อนดงทับ กรมควบคุมโรคติดต่อ',
+                document_link: 'https://drive.google.com/file/d/1KYFoijq6Ly02GvHnrE_buG8rCvCpVdrG/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1S21A0ETgmKZPd8MeeF0oT-D3sghbvOo&usp=sharing'
+            },
+            {
+                doc_number: 436,
+                province: 'จันทบุรี',
+                district: 'อำเภอเขาคิชฌกูฏ',
+                location: 'โรงเรียนวัดท่าอุดม (ยุบเลิก)',
+                document_link: 'https://drive.google.com/file/d/1Zml_1b3WMqPEzRjtKi1wScAaQ2687uSJ/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1K1OGLC4_ksTWpD4ktfirY8mPnkw4lXY&usp=sharing'
+            },
+			{
+                doc_number: 465,
+                province: 'จันทบุรี',
+                district: 'อำเภอท่าใหม่',
+                location: 'แปลงเกษตรโรงเรียนรำพัน',
+                document_link: 'https://drive.google.com/file/d/1uhpNHqMYG6C9oHWAJQe-8V_no_6OzeK_/view?usp=sharing',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1SI1iVPYOf3siAmS9IzhZpxIisG_z5PQ&usp=sharing'
+            },
+            {
+                doc_number: 467,
+                province: 'จันทบุรี',
+                district: 'อำเภอขลุง',
+                location: 'ใช้ในราชการกองทัพเรือ(สนามบินขลุง)ใช้ในราชการกองทัพเรือ(สนามบินขลุง)',
+                document_link: 'https://drive.google.com/file/d/1WOFSLvobnm550ueLNmZAN-tu_BTRS4C4/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1zvAIwuVvBdbktu-QUvKa9Z4GcBo95WE&usp=sharing'
+            },
+            {
+                doc_number: 487,
+                province: 'จันทบุรี',
+                district: 'อำเภอท่าใหม่',
+                location: 'โครงการชลประทานจันทบุรี',
+                document_link: 'https://drive.google.com/file/d/1r9g2mHd9tFIjje2lCSp49YaZiC58kxXV/view?usp=sharing',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=15Y4SaBVazS-u7O38Bpqj427Nv3yDmgY&usp=sharing'
+            },
+            {
+                doc_number: 507,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'ที่ว่าการอำเภอโป่งน้ำร้อน/โรงพยาบาลโป่งน้ำร้อน',
+                document_link: 'https://drive.google.com/file/d/1XkgzjGV28w0Xytq3456Hm_kIoM0Gosjt/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=171m3nH6fr3hiNZ4Eca-X2m8Xz4f6EfU&usp=sharing'
+            },
+            {
+                doc_number: 520,
+                province: 'จันทบุรี',
+                district: 'อำเภอท่าใหม่',
+                location: 'โรงเรียนบ้านไร่เก่า(แปลงเก่า)',
+                document_link: 'https://drive.google.com/file/d/1OCpovm6j6AO_xNqwHcjGrhOYiciZHEuY/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1hriaETKj7SXtiSp5hwKw2CGSKxdVsUo&usp=sharing'
+            },
+            {
+                doc_number: 572,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'สงวนไว้เพื่อปลูกสร้างโรงเรียนเกษตรกรรม',
+                document_link: 'https://drive.google.com/file/d/1wyDhFh5UrU8dLbmPVoWZHwD9cPe58WYW/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1JTNsb09Lg0mZij7r3Ve8_Quv6dOV1E8&usp=sharing'
+            },
+            {
+                doc_number: 573,
+                province: 'จันทบุรี',
+                district: 'อำเภอโป่งน้ำร้อน',
+                location: 'จัดให้เช่า/สงวนไว้สร้างโรงเรียนวิทยาลัยเกษตรกรรม',
+                document_link: 'https://drive.google.com/file/d/1nijwXLKVJAQU9cu509sPWyYibw-wLTy4/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1AMAHI6hBIhKPbXA2oAeDCfzHP54fwPA&usp=sharing'
+            },
+            {
+                doc_number: 575,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'ที่ว่าการอำเภอเมืองเก่าและสถารกงสุลฝรั่งเศส',
+                document_link: 'https://drive.google.com/file/d/1walPHsvea7fCMdyAf2aNsSJExAR0S_jB/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1SL_VZd0fQAHgVUXVEnCCOWXIBasBSq4&usp=sharing'
+            },
+            {
+                doc_number: 578,
+                province: 'จันทบุรี',
+                district: 'อำเภอเขาคิชฌกูฏ',
+                location: 'โครงการเขื่อนไฟฟ้าพลังน้ำคลองทุ่งเพ',
+                document_link: 'https://drive.google.com/file/d/1tYBCs08X4TpTPGaDp4K4twe-BCrKm6X9/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1juCCZAKJcANAQRP7nLQLtcPngWi3NAE&usp=sharing'
+            },
+            {
+                doc_number: 579,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1eHNwdcN2Y47QobuOOJMzj9musV7A7lSF/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1C7IdnSP2n2dim6xwSXXiiK2zrM7-15Q&usp=sharing'
+            },
+            {
+                doc_number: 586,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1vfEKwBAPaSRJUZEPfhR1fkEmJh5xxtVv/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1QuQBF9muz7LHBYM9tlcs1hVPhpiwTIM&usp=sharing'
+            },
+            {
+                doc_number: 592,
+                province: 'จันทบุรี',
+                district: 'อำเภอเขาคิชฌกูฏ',
+                location: 'โรงพยาบาลเขาคิชฌกูฏ',
+                document_link: 'https://drive.google.com/file/d/1nyDPKC1zytEtugKd4ctrnPWx8qQMQ5IU/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1KU96mZ-CRt5BTAG0sjHd_Gxs1eI-hto&usp=sharing'
+            },
+            {
+                doc_number: 634,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'กรมธนารักษ์จัดให้ราษฏรเช่า',
+                document_link: 'https://drive.google.com/file/d/1g-r056unfNuYuLCW3_z2-Q5HUeNidBJ1/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1J0McPbSivMcwg0GFMDA53_jaxGXLcSg&usp=sharing'
+            },
+            {
+                doc_number: 660,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'กรมธนารักษ์(ตกเป็นของรัฐตามคำพิพากษาของศาล)',
+                document_link: 'https://drive.google.com/file/d/1aRhXJhgCj5ZaIOO8b8mf5cBLwuI8ZsFQ/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1XfEOEinxRiszABXp3o0-5_gkMcbyIrQ&usp=sharing'
+            },
+            {
+                doc_number: 661,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'กรมธนารักษ์(ตกเป็นของรัฐตามคำพิพากษาศาล)',
+                document_link: 'https://drive.google.com/file/d/1fX-j43QF31J6jWGvL3Uh_hQ9BtJpRTyV/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1CL2q5z9tgIUYM5t3g4CqA3PLx2xCgt8&usp=sharing'
+            },
+            {
+                doc_number: 664,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'กรมธนารักษ์(จัดให้เช่า)',
+                document_link: 'https://drive.google.com/file/d/1_18G7swrXqydaOnMZJwPGxcsfz6je9CY/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1SffoSgFuesVDffWdz8DDkrSASqFk8EE&usp=sharing'
+            },
+            {
+                doc_number: 666,
+                province: 'จันทบุรี',
+                district: 'อำเภอเขาคิชฌกูฏ',
+                location: 'กรมการปกครอง ที่ว่ากรอำเภอเขาคิชฌกูฏ (สนามหน้าที่ว่าการอำเภอเขาคิชฌกูฏ)',
+                document_link: 'https://drive.google.com/file/d/104MRTc7vaHoDnPixHm90IpX441yXOuKw/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1x5lg-gFP0zAXaHsmt3hNBdr4L1F2MYQ&usp=sharing'
+            },
+            {
+                doc_number: 667,
+                province: 'จันทบุรี',
+                district: 'อำเภอสอยดาว',
+                location: 'กองทัพบกใช้ในราชการกองทัพบก',
+                document_link: 'https://drive.google.com/file/d/1JUvzs9ODNExZkMzrtyCxyOraqz55Vnkg/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=13VSrbnDFUxHzHgYD1HhoELf9Oh16kKI&usp=sharing'
+            },
+            {
+                doc_number: 669,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'กรมธนารักษ์ จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1DJhQ75Uv1uE64ehS3PDp1NnXEGqU2cbo/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1w2oiqElNA0Qc8gBXuOTenugSiUOknd0&usp=sharing'
+            },
+            {
+                doc_number: 670,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'กรมธนารักษ์ จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/10R6negVo7DnAycDabcqek9GGKoMzi2k7/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1w2oiqElNA0Qc8gBXuOTenugSiUOknd0&usp=sharing'
+            },
+            {
+                doc_number: 674,
+                province: 'จันทบุรี',
+                district: 'เมืองจันทบุรี',
+                location: 'จัดให้เช่า',
+                document_link: 'https://drive.google.com/file/d/1xQS8u6B3f2J_YJxDqPul2bUzGGE5pPrN/view?usp=drive_link',
+                map_link: 'https://www.google.com/maps/d/u/1/edit?mid=1HpcbIpytbJWy_u-rFiP0mzfiNaLhWd0&usp=sharing'
+            },
+        ];
+
+        // 3. Functions (ฟังก์ชันการทำงาน)
+
+        /**
+         * Populates the district dropdown with unique sorted districts from rawData.
+         */
+        const populateDistricts = () => {
+            const districts = [...new Set(rawData.map(item => item.district))].sort();
+            districts.forEach(district => {
+                const option = document.createElement('option');
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+        };
+
+        /**
+         * Simulates fetching and filtering data with a loading indicator.
+         * @param {object} params - Search parameters (docNumber, province, district).
+         * @returns {Promise<Array>} A promise that resolves with filtered data.
+         */
+        const fetchData = async (params) => {
+            showLoading(true); // Show loading spinner and overlay
+            noResultsMessage.classList.add('hidden', 'no-animation'); // Hide no results and prevent animation on search
+            resultSection.classList.remove('show-animated'); // Reset animation for result section
+
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const filteredData = rawData.filter(item => {
+                        const docNumberMatch = !params.docNumber || String(item.doc_number).includes(params.docNumber);
+                        const provinceMatch = !params.province || item.province.includes(params.province);
+                        const districtMatch = !params.district || item.district === params.district;
+                        return docNumberMatch && provinceMatch && districtMatch;
+                    });
+                    showLoading(false); // Hide loading spinner and overlay
+                    resolve(filteredData);
+                }, 700); // Simulate network delay
+            });
+        };
+
+        /**
+         * Renders the table rows based on the current page of results.
+         * @param {Array} results - The array of data to display.
+         */
+        const renderTable = (results) => {
+            resultsBody.innerHTML = ''; // Clear previous results
+
+            if (results.length === 0) {
+                noResultsMessage.classList.remove('hidden', 'no-animation');
+                noResultsMessage.classList.add('show-animated'); // Animate no results message
+                resultSection.classList.remove('hidden');
+                resultSection.classList.add('show-animated'); // Animate if results section becomes visible
+                return;
+            } else {
+                noResultsMessage.classList.add('hidden');
+                noResultsMessage.classList.remove('show-animated');
+            }
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = results.slice(start, end);
+
+            paginatedItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td data-label="จบ.">${item.doc_number}</td>
+                    <td data-label="จังหวัด">${item.province}</td>
+                    <td data-label="อำเภอ">${item.district}</td>
+                    <td data-label="การใช้ประโยชน์" class="text-align-left">${item.location}</td>
+                    <td data-label="เอกสาร">
+                        ${item.document_link ? `<a href="${item.document_link}" target="_blank" rel="noopener noreferrer" class="action-link" title="คลิกเพื่อเปิดลิงก์เอกสาร"><i class="fas fa-file-alt"></i></a>` : '-'}
+                    </td>
+                    <td data-label="แผนที่">
+                        ${item.map_link ? `<a href="${item.map_link}" target="_blank" rel="noopener noreferrer" class="action-link" title="คลิกเพื่อเปิดลิงก์แผนที่"><i class="fas fa-map-marker-alt"></i></a>` : '-'}
+                    </td>
+                `;
+                resultsBody.appendChild(row);
+            });
+
+            resultSection.classList.remove('hidden');
+            resultSection.classList.add('show-animated'); // Add animation class when content is rendered
+        };
+
+        /**
+         * Updates the pagination controls (page info, prev/next button disabled states).
+         */
+        const updatePaginationControls = () => {
+            const totalPages = Math.ceil(allResults.length / itemsPerPage);
+            pageInfoSpan.textContent = `หน้า ${currentPage} จาก ${totalPages === 0 ? 1 : totalPages}`;
+            prevPageButton.disabled = currentPage === 1;
+            nextPageButton.disabled = currentPage === totalPages || totalPages === 0;
+        };
+
+        /**
+         * Handles the main search operation.
+         */
+        const handleSearch = async () => {
+            const params = {
+                docNumber: docNumberInput.value.trim(),
+                province: provinceInput.value.trim(),
+                district: districtSelect.value,
+            };
+
+            currentPage = 1; // Reset to first page on new search
+            allResults = await fetchData(params);
+            renderTable(allResults);
+            updatePaginationControls();
+        };
+
+        /**
+         * Clears all search fields and performs a new search to show all data.
+         */
+        const handleClear = () => {
+            docNumberInput.value = '';
+            districtSelect.value = '';
+            clearDocNumberInputButton.style.display = 'none';
+            clearDistrictInputButton.style.display = 'none';
+            docNumberInput.focus();
+            handleSearch();
+        };
+
+        /**
+         * Toggles the loading spinner and overlay visibility.
+         * @param {boolean} show - True to show, false to hide.
+         */
+        const showLoading = (show) => {
+            if (show) {
+                loadingSpinner.classList.add('active');
+                loadingOverlay.classList.add('active');
+                resultSection.classList.add('hidden'); // Hide results section while loading
+            } else {
+                loadingSpinner.classList.remove('active');
+                loadingOverlay.classList.remove('active');
+                resultSection.classList.remove('hidden'); // Show results section after loading
+            }
+        };
+
+        /**
+         * Toggles between light and dark mode.
+         */
+        const toggleTheme = () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            const icon = themeToggleButton.querySelector('i');
+            if (isDarkMode) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        };
+
+        /**
+         * Applies the saved theme preference from local storage.
+         */
+        const applySavedTheme = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                isDarkMode = true;
+                document.body.classList.add('dark-mode');
+                themeToggleButton.querySelector('i').classList.remove('fa-moon');
+                themeToggleButton.querySelector('i').classList.add('fa-sun');
+            } else {
+                isDarkMode = false; // Default to light mode
+                document.body.classList.remove('dark-mode');
+                themeToggleButton.querySelector('i').classList.remove('fa-sun');
+                themeToggleButton.querySelector('i').classList.add('fa-moon');
+            }
+        };
+
+        /**
+         * Handles the footer slide-in animation based on scroll position.
+         */
+        const handleFooterAnimation = () => {
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const documentHeight = document.documentElement.offsetHeight;
+
+            // Trigger when scroll position is near the bottom (e.g., last 5% of document height)
+            if (scrollPosition >= documentHeight * 0.95) {
+                footerElement.classList.add('footer-show');
+            } else {
+                // Optional: uncomment if you want the footer to hide when scrolling up
+                // footerElement.classList.remove('footer-show');
+            }
+        };
+
+        // 4. Event Listeners (การจัดการ Event)
+
+        // Search and Clear Buttons
+        searchButton.addEventListener('click', handleSearch);
+        clearButton.addEventListener('click', handleClear);
+
+        // Input field clear buttons
+        docNumberInput.addEventListener('input', () => {
+            clearDocNumberInputButton.style.display = docNumberInput.value.length > 0 ? 'block' : 'none';
+        });
+        clearDocNumberInputButton.addEventListener('click', () => {
+            docNumberInput.value = '';
+            clearDocNumberInputButton.style.display = 'none';
+            docNumberInput.focus();
+            handleSearch(); // Re-filter results after clearing
+        });
+
+        districtSelect.addEventListener('change', () => {
+            // Show clear button for district if an option other than "ทั้งหมด" is selected
+            clearDistrictInputButton.style.display = districtSelect.value !== '' ? 'block' : 'none';
+            handleSearch();
+        });
+        clearDistrictInputButton.addEventListener('click', () => {
+            districtSelect.value = ''; // Set to "ทั้งหมด"
+            clearDistrictInputButton.style.display = 'none';
+            districtSelect.focus();
+            handleSearch(); // Re-filter results after clearing
+        });
+
+        // Enter key for search input
+        docNumberInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+
+        // Pagination Buttons
+        prevPageButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable(allResults);
+                updatePaginationControls();
+            }
+        });
+        nextPageButton.addEventListener('click', () => {
+            const totalPages = Math.ceil(allResults.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable(allResults);
+                updatePaginationControls();
+            }
+        });
+
+        // Theme Toggle Button
+        themeToggleButton.addEventListener('click', toggleTheme);
+
+        // Info Modal
+        if (infoButton) {
+            infoButton.addEventListener('click', () => {
+                infoModal.style.display = 'flex';
+                document.body.classList.add('modal-open');
+                infoModal.style.animation = 'fadeInBackdrop 0.4s forwards';
+            });
+        }
+
+        closeButton.addEventListener('click', () => {
+            infoModal.style.animation = 'fadeOutBackdrop 0.4s forwards';
+            infoModal.addEventListener('animationend', function handler() {
+                infoModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                infoModal.removeEventListener('animationend', handler);
+            });
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == infoModal) {
+                infoModal.style.animation = 'fadeOutBackdrop 0.4s forwards';
+                infoModal.addEventListener('animationend', function handler() {
+                    infoModal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    infoModal.removeEventListener('animationend', handler);
+                });
+            }
+        });
+
+        // Scroll to Top Button
+        window.addEventListener('scroll', () => {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Footer Animation on Scroll
+        window.addEventListener('scroll', handleFooterAnimation);
+
+        // 5. Initial Load (การโหลดเริ่มต้น)
+        document.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme(); // Apply saved theme first
+            populateDistricts();
+            handleSearch(); // Perform initial search to populate table
+            docNumberInput.focus(); // Focus on docNumber input on load
+            handleFooterAnimation(); // Check footer visibility on load
+        });
+		document.addEventListener("DOMContentLoaded", () => {
+		  // แสดง modal เมื่อเปิดเว็บครั้งแรก
+		  infoModal.style.display = "flex";
+		  document.body.classList.add("modal-open");
+		});
+
+
+		// ================== สถิติรายเดือน ==================
+		function getCurrentMonthKey() {
+			const now = new Date();
+			const month = (now.getMonth() + 1).toString().padStart(2, "0"); // 01-12
+			const year = now.getFullYear();
+			return `${year}-${month}`; // เช่น 2025-10
+		}
+
+		// โหลดข้อมูลสถิติจาก localStorage
+		let monthlyStats = JSON.parse(localStorage.getItem("monthlyStats")) || {};
+		let currentKey = getCurrentMonthKey();
+
+		// ถ้าเดือนนี้ยังไม่มีข้อมูล ให้เริ่มใหม่
+		if (!monthlyStats[currentKey]) {
+			monthlyStats[currentKey] = { visitors: 0, searches: 0 };
+		}
+
+		// นับผู้เข้าชม (ครั้งแรกของเดือนนี้)
+		if (!localStorage.getItem("visited_" + currentKey)) {
+			monthlyStats[currentKey].visitors++;
+			localStorage.setItem("visited_" + currentKey, "true");
+		}
+
+		// ฟังก์ชันสำหรับอัปเดตตัวเลขบนหน้าเว็บ
+		function updateStatsDisplay() {
+			const visitorCountElement = document.getElementById("visitorCount");
+			const searchCountElement = document.getElementById("searchCount");
+
+			if (visitorCountElement) {
+				visitorCountElement.innerText = monthlyStats[currentKey].visitors.toLocaleString();
+			}
+			if (searchCountElement) {
+				searchCountElement.innerText = monthlyStats[currentKey].searches.toLocaleString();
+			}
+		}
+
+		// บันทึกสถิติและอัปเดตการแสดงผล
+		function saveAndDisplayStats() {
+			localStorage.setItem("monthlyStats", JSON.stringify(monthlyStats));
+			updateStatsDisplay();
+		}
+
+		// เมื่อหน้าเว็บโหลดเสร็จ ให้อัปเดตสถิติ
+		document.addEventListener("DOMContentLoaded", saveAndDisplayStats);
+
+		// เพิ่ม Event Listener เพื่ออัปเดตการนับการค้นหา
+		searchButton.addEventListener("click", () => {
+			// โหลดข้อมูลล่าสุดก่อนการอัปเดต
+			monthlyStats = JSON.parse(localStorage.getItem("monthlyStats")) || {};
+			currentKey = getCurrentMonthKey();
+			if (!monthlyStats[currentKey]) {
+				monthlyStats[currentKey] = { visitors: 0, searches: 0 };
+			}
+
+			monthlyStats[currentKey].searches++;
+			saveAndDisplayStats();
+		});
+
+
+
+
+    </script>
+</body>
+</html>
